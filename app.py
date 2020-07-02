@@ -22,19 +22,26 @@ admin.add_view(ModelView(Category, db.session))
 admin.add_view(ModelView(Order, db.session))
 admin.add_view(ModelView(Meal, db.session))
 
-@app.route("/")
-def first():
-    categories = Category.query.all()
-    for i in categories:
-        shuffle(i.meals)
+def inside_cart():
     if not session.get("cart"):
-        cart = "Пусто"
+        return None
     else:
         total = 0
         tmp = json.loads(session["cart"])
         for i in tmp.items(): 
             total += Meal.query.filter(Meal.id == int(i[0])).first().price * int(i[1])
-        cart = "{} блюда {}руб.".format(sum(tmp.values()), total)
+        return (sum(tmp.values()), total)
+        
+@app.route("/")
+def first():
+    categories = Category.query.all()
+    for i in categories:
+        shuffle(i.meals)
+    cart = inside_cart()
+    if not cart:
+        cart = "Пусто"
+    else:
+        cart = "{} блюда {}руб.".format(cart[0], cart[1])
             
     return render_template("main.html", categories=categories, cart = cart)
 
@@ -56,8 +63,15 @@ def kill_cart():
     
 @app.route("/cart/")
 def cart():
+    tmp = inside_cart()
+    if not tmp:
+        cart = "Пусто"
+        cart2 = "Корзина пуста"
+    else:
+        cart = "{} блюда {}руб.".format(tmp[0], tmp[1])
+        cart2 = "{} блюда в корзине".format(tmp[0])
     
-    return render_template("cart.html")
+    return render_template("cart.html", cart = cart, cart2 = cart2)
 
 @app.route("/account/")
 def account():
