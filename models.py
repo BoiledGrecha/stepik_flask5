@@ -23,12 +23,13 @@ class Category(db.Model):
 class Order(db.Model):
     __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key = True)
-    date = db.Column(db.DateTime)
+    date = db.Column(db.Date)
     summa = db.Column(db.Integer)
     status = db.Column(db.String)
     mail = db.Column(db.String)
     phone = db.Column(db.String)
     address = db.Column(db.String)
+    json_order = db.Column(db.String)
     
     user = db.relationship("User")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
