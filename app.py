@@ -42,7 +42,7 @@ def get_id():
 def get_cart():
     cart = inside_cart()
     if not cart:
-        cart = "Пусто"
+        cart = "Пуста"
     else:
         cart = "{} блюда {}руб.".format(cart[0], cart[1])
     return cart
@@ -66,13 +66,6 @@ def add_cart(id):
     session["cart"] = json.dumps(session["cart"])
     return redirect(url_for("cart"))
 
-#delete <-----------------
-@app.route("/kill_cart/")
-def kill_cart():
-    session.pop("cart")
-    return "OK"
-
-
 @app.route("/cart/", methods = ["GET", "POST"])
 def cart():
     is_deleted = False
@@ -89,6 +82,7 @@ def cart():
     
     if not tmp:
         cart2 = "Корзина пуста"
+        tmp = ("","")
     else:
         meals = json.loads(session["cart"])
         cart2 = "{} блюда в корзине".format(tmp[0])
@@ -147,8 +141,6 @@ def rergister():
 def logout():
     session.pop("user_id")
     return redirect(url_for("first"))
-    # return render_template("auth.html")
-
 
 @app.route("/ordered/", methods = ["GET", "POST"])
 def ordered():
@@ -175,4 +167,4 @@ def ordered():
         return redirect(url_for("cart"))
             
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(debug=False)

@@ -29,11 +29,13 @@ class Order(db.Model):
     mail = db.Column(db.String)
     phone = db.Column(db.String)
     address = db.Column(db.String)
+    
+    #added to view value of meals in /account/ 
     json_order = db.Column(db.String)
+    ###########
     
     user = db.relationship("User")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    
     meals = db.relationship("Meal", secondary=orders_meals_association,
             back_populates="orders")
 
@@ -43,7 +45,6 @@ class User(db.Model):
     mail = db.Column(db.String)
     password = db.Column(db.String)
     orders = db.relationship("Order")
-    
 
 class Meal(db.Model):
     __tablename__ = "meals"
@@ -52,10 +53,8 @@ class Meal(db.Model):
     price = db.Column(db.Integer)
     description = db.Column(db.String)
     picture = db.Column(db.String)
-    
     category = db.relationship("Category")
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
-    
     orders = db.relationship("Order", secondary=orders_meals_association,
             back_populates="meals")
 
